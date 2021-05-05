@@ -12,7 +12,20 @@ class ComplaintRequestPage extends StatefulWidget {
   _ComplaintRequestPageState createState() => _ComplaintRequestPageState();
 }
 
-class _ComplaintRequestPageState extends State<ComplaintRequestPage> {
+class _ComplaintRequestPageState extends State<ComplaintRequestPage> with SingleTickerProviderStateMixin {
+  final List<Tab> myTabs = <Tab>[
+    Tab(text: 'Open Requests'),
+    Tab(text: 'Closed Requests'),
+  ];
+
+  TabController _tabController;
+
+  @override
+  void initState() {
+    super.initState();
+    _tabController = TabController(vsync: this, length: myTabs.length);
+  }
+
   Widget _buildComplaintRequestCard(ComplaintRequest complaintRequest) {
     return Card(
           child:ListTile(
@@ -36,17 +49,33 @@ class _ComplaintRequestPageState extends State<ComplaintRequestPage> {
 
 
   Widget _buildComplaintRequests() {
-    return Consumer<ComplaintRequestsModel>(
-      builder: (context, complaintRequestModel, child) {
-        List<ComplaintRequest> complaintRequests = complaintRequestModel.complaintRequests;
-        return ListView.builder(
-          itemCount: complaintRequests.length,
-          itemBuilder: (context, i) {
-            return _buildComplaintRequestCard(complaintRequests[i]);
-          }
-        );
-      },
-    );
+    return TabBarView(
+        controller: _tabController,
+        children: [
+          Consumer<ComplaintRequestsModel>(
+            builder: (context, complaintRequestModel, child) {
+              List<ComplaintRequest> complaintRequests = complaintRequestModel.getOpenComplaints();
+              return ListView.builder(
+                itemCount: complaintRequests.length,
+                itemBuilder: (context, i) {
+                  return _buildComplaintRequestCard(complaintRequests[i]);
+                }
+              );
+            },
+          ),
+          Consumer<ComplaintRequestsModel>(
+            builder: (context, complaintRequestModel, child) {
+              List<ComplaintRequest> complaintRequests = complaintRequestModel.getClosedComplaints();
+              return ListView.builder(
+                itemCount: complaintRequests.length,
+                itemBuilder: (context, i) {
+                  return _buildComplaintRequestCard(complaintRequests[i]);
+                }
+              );
+            },
+          )
+        ]
+      );
   }
 
   @override
@@ -54,6 +83,10 @@ class _ComplaintRequestPageState extends State<ComplaintRequestPage> {
     return Scaffold(
       appBar: AppBar(
         title: Text("Complaint Requests"),
+        bottom: TabBar(
+          controller: _tabController,
+          tabs: myTabs,
+        ),
         actions: <Widget>[
           Consumer<LoggedInAgentModel>(
             builder: (context, value, child) {
