@@ -41,10 +41,9 @@ class _LoginPage extends State<LoginPage> {
       child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
-            Container(height: 10,),
-            Text("Enter User Credentials"),
-            Container(height: 10,),
+            Container(height: 30,),
             _buildUsername(),
+            Container(height: 10,),
             _buildPassword(),
             Text(text, style: TextStyle(color: Colors.red),),
             Container(height: 10,),
@@ -82,7 +81,7 @@ class _LoginPage extends State<LoginPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: Text("Login with Agent"),),
+      appBar: AppBar(title: Text("Login with User Credentials"),),
 
       body: Row(
         children: [
