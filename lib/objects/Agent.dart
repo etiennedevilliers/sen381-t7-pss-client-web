@@ -8,34 +8,33 @@ class Agent {
   final String employmentStatus;
   final String employeeType;
 
-  Agent({
-    this.agentID, 
-    this.aName,
-    this.contactNum,
-    this.employmentStatus,
-    this.employeeType
-  });
+  Agent(
+      {this.agentID,
+      this.aName,
+      this.contactNum,
+      this.employmentStatus,
+      this.employeeType});
 
   factory Agent.fromJson(Map<String, dynamic> json) {
     return Agent(
-      agentID: json['AgentID'],
-      aName: json['aName'],
-      contactNum: json['contactNum'],
-      employmentStatus: json['employmentStatus'],
-      employeeType: json['employeeType']
-    );
+        agentID: json['AgentID'],
+        aName: json['aName'],
+        contactNum: json['contactNum'],
+        employmentStatus: json['employmentStatus'],
+        employeeType: json['employeeType']);
   }
 }
 
 Future<List<Agent>> fetchAgents() async {
-  final response = await http.get(Uri.http('localhost:3000', 'CallCentreAgents'));
+  final response =
+      await http.get(Uri.http('ludere.co.za:3000', 'CallCentreAgents'));
 
   if (response.statusCode == 200) {
     Map<String, dynamic> mapResponse = jsonDecode(response.body);
     List<Agent> agents = [];
 
     print(mapResponse);
-    
+
     for (Map<String, dynamic> item in mapResponse["recordset"]) {
       agents.add(Agent.fromJson(item));
     }
@@ -52,8 +51,7 @@ Future<Agent> fetchAgent(int agentID) async {
   print(agents);
 
   for (Agent agent in agents) {
-    if (agent.agentID == agentID) 
-      return agent;
+    if (agent.agentID == agentID) return agent;
   }
   return null;
 }

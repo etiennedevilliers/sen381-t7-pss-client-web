@@ -13,11 +13,11 @@ class LoggedInAgentModel extends ChangeNotifier {
 
   Future<bool> login(String username, String password) async {
     Map<String, String> headers = {
-      'username' : '${username}',
-      'password' : '${password}',
+      'username': '${username}',
+      'password': '${password}',
     };
     Uri uri = Uri.http(
-      'localhost:3000', 
+      'ludere.co.za:3000',
       'CheckCredentials',
     );
     print(uri);
@@ -39,7 +39,6 @@ class LoggedInAgentModel extends ChangeNotifier {
         agentID = null;
         _selectedAgent = null;
       }
-
     } else {
       throw Exception('Failed log call');
     }
