@@ -29,7 +29,7 @@ class MyApp extends StatelessWidget {
         if (value.loggedIn) {
           return ComplaintRequestPage();
         } else {
-          return AgentSelectPage();
+          return LoginPage();
         }
       },
     );

@@ -9,7 +9,7 @@ Future<void> endCall(int agentID, DateTime start, DateTime end) async {
     'AgentID' : '${agentID}'
   };
   final response = await http.post(Uri.http(
-    'ludere.co.za:3000', 
+    'localhost:3000', 
     'InsertCallLog',
     queryParameters
   ));

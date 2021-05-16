@@ -27,7 +27,7 @@ Future<Client> fetchClient(int clientID) async {
     "clientID" : clientID.toString()
   };
   final response = await http.get(Uri.http(
-    'ludere.co.za:3000', 
+    'localhost:3000', 
     'Client',
     queryParameters
   ));

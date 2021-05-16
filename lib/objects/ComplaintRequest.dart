@@ -37,7 +37,7 @@ class ComplaintRequest {
 }
 
 Future<List<ComplaintRequest>> fetchComplaintRequests() async {
-  final response = await http.get(Uri.http('ludere.co.za:3000', 'ComplaintRequests'));
+  final response = await http.get(Uri.http('localhost:3000', 'ComplaintRequests'));
 
   if (response.statusCode == 200) {
     Map<String, dynamic> mapResponse = jsonDecode(response.body);
@@ -62,7 +62,7 @@ Future<void> resolveComplaintRequest(int complaintRequestID, int agentID, DateTi
     'DateTimeResolved' : '${end}'
   };
   final response = await http.post(Uri.http(
-    'ludere.co.za:3000', 
+    'localhost:3000', 
     'ResolveComplaintRequest',
     queryParameters
   ));

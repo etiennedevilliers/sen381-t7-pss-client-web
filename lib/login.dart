@@ -1,67 +1,96 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'Models/LoggedInAgent.dart';
 import 'objects/Agent.dart';
 import 'Models/LoggedInAgent.dart';
 
-class AgentSelectPage extends StatefulWidget {
+class LoginPage extends StatefulWidget {
   @override
-  _AgentSelectPageState createState() => _AgentSelectPageState();
+  _LoginPage createState() => _LoginPage();
 }
 
-class _AgentSelectPageState extends State<AgentSelectPage> {
-  Future<List<Agent>> agentFuture = fetchAgents();
+class _LoginPage extends State<LoginPage> {
+  TextEditingController usernameController = new TextEditingController();
+  TextEditingController passwordController = new TextEditingController();
+  String text = "";
 
-  Widget _buildAgentTile(Agent agent) {    
-    return Card(
-      child: ListTile(
-        title: Text(agent.aName),
-        subtitle: Text(agent.contactNum),
-        trailing: Consumer<LoggedInAgentModel>(
-          builder: (context, value, child) {
-            return  ElevatedButton(
-              child: Text("Login"),
-              onPressed: () {
-                value.login(agent);
-              },
-            );
-          },
-        )  
+  Widget _buildUsername() {
+    return TextField(
+      controller: usernameController,
+      decoration: InputDecoration(
+        border: OutlineInputBorder(),
+        hintText: 'username'
       ),
     );
   }
 
-  Widget _buildAgents() {
-    return FutureBuilder<List<Agent>>(
-      future: agentFuture,
-      builder: (context, snapshot) {
-
-        if (snapshot.hasData) {
-          List<Agent> agents = snapshot.data;
-
-          return ListView.builder(
-            itemCount: agents.length,
-            itemBuilder: (context, index) {
-              Agent agent = agents[index];
-              return _buildAgentTile(agent);
-            },
-          );
-        } else if (snapshot.hasError) {
-          return Text("${snapshot.error}");
-        }
-
-        // By default, show a loading spinner.
-        return CircularProgressIndicator();
-      },
+  Widget _buildPassword() {
+    return TextField(
+      controller: passwordController,
+      obscureText: true,
+      decoration: InputDecoration(
+        border: OutlineInputBorder(),
+        hintText: 'password'
+      ),
     );
   }
 
+  Widget _buildLogin() {
+    return Container(
+      width: 400,
+      child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Container(height: 10,),
+            Text("Enter User Credentials"),
+            Container(height: 10,),
+            _buildUsername(),
+            _buildPassword(),
+            Text(text, style: TextStyle(color: Colors.red),),
+            Container(height: 10,),
+            Row(
+              children: [
+                Expanded(child: Container()),
+                Consumer<LoggedInAgentModel>(
+                  builder: (context, value, child) {
+
+                    return MaterialButton(
+                      onPressed: () {
+                        value.login(
+                          usernameController.text, 
+                          passwordController.text
+                        ).then((bool value) {
+                          if (!value) {
+                            setState(() {
+                              text = "Incorrect username & password combination";
+                            });
+                          }
+                        });
+                      },
+                      child: Text("Login"),
+                    );
+                  },
+                ),
+              ],
+            ),
+            Expanded(child: Container())
+          ],
+        ),
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(title: Text("Login with Agent"),),
 
-      body: _buildAgents(),
+      body: Row(
+        children: [
+          Expanded(child: Container()),
+          _buildLogin(),
+          Expanded(child: Container()),
+        ],
+      ),
     );
   }
 }

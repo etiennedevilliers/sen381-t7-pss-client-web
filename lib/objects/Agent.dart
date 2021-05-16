@@ -28,7 +28,7 @@ class Agent {
 }
 
 Future<List<Agent>> fetchAgents() async {
-  final response = await http.get(Uri.http('ludere.co.za:3000', 'CallCentreAgents'));
+  final response = await http.get(Uri.http('localhost:3000', 'CallCentreAgents'));
 
   if (response.statusCode == 200) {
     Map<String, dynamic> mapResponse = jsonDecode(response.body);
@@ -44,4 +44,16 @@ Future<List<Agent>> fetchAgents() async {
   } else {
     throw Exception('Failed to load ComplaintRequests');
   }
+}
+
+Future<Agent> fetchAgent(int agentID) async {
+  List<Agent> agents = await fetchAgents();
+
+  print(agents);
+
+  for (Agent agent in agents) {
+    if (agent.agentID == agentID) 
+      return agent;
+  }
+  return null;
 }
